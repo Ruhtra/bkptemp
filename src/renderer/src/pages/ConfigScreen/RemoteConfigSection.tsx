@@ -11,7 +11,7 @@ import { UseFormReturn } from 'react-hook-form'
 export function RemoteConfigSection({ form }: { form: UseFormReturn<any> }) {
   const handleSelectSshKey = async () => {
     try {
-      const selectedFile = await window.electron.ipcRenderer.invoke('dialog:openFile', 'any')
+      const selectedFile = await window.api.openFile('any')
       if (selectedFile && selectedFile.length > 0) {
         form.setValue('sshKeyPath', selectedFile[0])
       }

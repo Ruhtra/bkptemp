@@ -10,7 +10,7 @@ import { UseFormReturn } from 'react-hook-form'
 export function OutputFolderSection({ form }: { form: UseFormReturn<any> }) {
   const handleFolderSelect = async () => {
     try {
-      const selectedFolder = await window.electron.ipcRenderer.invoke('dialog:openFile', 'folder')
+      const selectedFolder = await window.api.openFile('folder')
       if (selectedFolder && selectedFolder.length > 0) {
         form.setValue('outputFolder', selectedFolder[0])
       }

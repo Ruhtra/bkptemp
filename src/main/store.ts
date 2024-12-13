@@ -22,7 +22,7 @@ export const zodOptionsSchema = z.object({
     .default({})
 })
 
-type Options = z.infer<typeof zodOptionsSchema>
+export type Options = z.infer<typeof zodOptionsSchema>
 const optionsObject = Object.fromEntries(
   Object.entries(zodToJsonSchema(zodOptionsSchema)).filter(
     ([key]) => key !== 'type' && key !== 'additionalProperties' && key !== '$schema'

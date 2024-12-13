@@ -13,24 +13,9 @@ import { RemoteConfigSection } from './RemoteConfigSection'
 import { ActionButtons } from './ActionButtons'
 import { useNavigate } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
+import { Options } from 'electron'
 
 //puxar da shared
-export interface SettingsStore {
-  backupConfig: {
-    backupFiles: string[]
-    dayToKeep: number
-    backupCron: string
-    outputFolder: string
-
-    sendFile: boolean
-    pathRemote?: string
-    sftpUser?: string
-    sftpHost?: string
-    sftpPort?: string
-    sshKeyPath?: string
-  }
-  theme: string
-}
 
 const formSchema = z
   .object({
@@ -83,11 +68,11 @@ export function ConfigScreen() {
   })
 
   useEffect(() => {
-    if (window.electron.ipcRenderer) {
-      window.electron.ipcRenderer
-        .invoke('getSettings')
-        .then(({ backupConfig }: SettingsStore) => {
-          console.log(backupConfig)
+    if (window.api) {
+      window.api
+        .getConfig()
+        //remove typing any
+        .then(({ backupConfig }: any) => {
           form.reset({
             backupFiles: backupConfig.backupFiles,
             backupCron: backupConfig.backupCron,
@@ -102,16 +87,14 @@ export function ConfigScreen() {
           })
           setIsLoading(false)
         })
-        .catch((error: any) => {
+        .catch((error) => {
           console.error('Error fetching settings:', error)
           setIsLoading(false)
         })
     }
   }, [])
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log('Configurações salvas:', values)
-
-    window.electron.ipcRenderer.invoke('setSettings', {
+    window.api.setConfig({
       backupConfig: {
         backupCron: values.backupCron,
         backupFiles: values.backupFiles,
@@ -126,6 +109,22 @@ export function ConfigScreen() {
       },
       theme: 'dark'
     })
+
+    // window.electron.ipcRenderer.invoke('setSettings', {
+    //   backupConfig: {
+    //     backupCron: values.backupCron,
+    //     backupFiles: values.backupFiles,
+    //     dayToKeep: 3,
+    //     outputFolder: values.outputFolder,
+    //     sendFile: values.sendFile,
+    //     pathRemote: values.pathRemote,
+    //     sftpUser: values.sftpUser,
+    //     sftpHost: values.sftpHost,
+    //     sftpPort: values.sftpPort,
+    //     sshKeyPath: values.sshKeyPath
+    //   },
+    //   theme: 'dark'
+    // })
 
     navigate('/')
   }

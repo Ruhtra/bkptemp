@@ -9,7 +9,7 @@ import { UseFormReturn } from 'react-hook-form'
 export function BackupFilesSection({ form }: { form: UseFormReturn<any> }) {
   const handleExplorer = async () => {
     try {
-      const selectedFiles = await window.electron.ipcRenderer.invoke('dialog:openFile', 'file')
+      const selectedFiles = await window.api.openFile('file')
       if (selectedFiles && selectedFiles.length > 0) {
         form.setValue('backupFiles', [...form.getValues('backupFiles'), ...selectedFiles])
       }
