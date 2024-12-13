@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, Tray, Menu, Options } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, Tray, Menu, Options, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import './store.ts'
@@ -81,6 +81,30 @@ app.whenReady().then(() => {
   ipcMain.handle('getSettings', () => store.store)
   ipcMain.handle('setSettings', (_event, newSettings: Options) => {
     store.set(newSettings)
+  })
+  ipcMain.handle('dialog:openFile', async (_event, type: 'file' | 'folder' | 'any') => {
+    if (type === 'file') {
+      const result = await dialog.showOpenDialog({
+        properties: ['openFile'], // Permite selecionar arquivos e pastas
+        filters: [
+          {
+            name: 'Firebird File (.FDB)',
+            extensions: ['fdb', 'FDB'] // Filtrando para arquivos com extensões relacionadas ao SSH
+          }
+        ]
+      })
+      return result.filePaths
+    } else if (type == 'folder') {
+      const result = await dialog.showOpenDialog({
+        properties: ['openFile', 'openDirectory'] // Permite selecionar arquivos e pastas
+      })
+      return result.filePaths
+    } else if (type == 'any') {
+      const result = await dialog.showOpenDialog({
+        properties: ['openFile'] // Permite selecionar arquivos e pastas
+      })
+      return result.filePaths
+    }
   })
 
   createWindow()

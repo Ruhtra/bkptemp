@@ -1,42 +1,21 @@
-import electronLogo from './assets/electron.svg'
-import { useEffect } from 'react'
+import { HashRouter as Router, Route, Routes } from 'react-router-dom'
+import { Layout } from './layouts/Layout'
+import { MainScreen } from './pages/MainScreen'
+import { ConfigScreen } from './pages/ConfigScreen'
 
-function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-
-  useEffect(() => {
-    if (window.electron && window.electron.ipcRenderer) {
-      window.electron.ipcRenderer.invoke('getSettings').then((settings) => {
-        console.log('Settings:', settings)
-      })
-    }
-  }, [])
-
+export function RouterSet() {
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<MainScreen />} />
+          <Route path="config" element={<ConfigScreen />} />
+        </Route>
+      </Routes>
+    </Router>
   )
 }
 
-export default App
+export function App() {
+  return <RouterSet />
+}
