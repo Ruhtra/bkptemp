@@ -1,7 +1,8 @@
-import { app, shell, BrowserWindow, ipcMain, Tray, Menu } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, Tray, Menu, Options } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import { resetSettings } from './store.ts'
+import './store.ts'
+import { store } from './store.ts'
 
 let isQuiting = false
 let tray: Tray | null = null
@@ -77,6 +78,10 @@ app.whenReady().then(() => {
   })
 
   ipcMain.on('ping', () => console.log('pong'))
+  ipcMain.handle('getSettings', () => store.store)
+  ipcMain.handle('setSettings', (_event, newSettings: Options) => {
+    store.set(newSettings)
+  })
 
   createWindow()
 

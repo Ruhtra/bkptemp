@@ -1,8 +1,16 @@
-import Versions from './components/Versions'
 import electronLogo from './assets/electron.svg'
+import { useEffect } from 'react'
 
 function App(): JSX.Element {
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+
+  useEffect(() => {
+    if (window.electron && window.electron.ipcRenderer) {
+      window.electron.ipcRenderer.invoke('getSettings').then((settings) => {
+        console.log('Settings:', settings)
+      })
+    }
+  }, [])
 
   return (
     <>
@@ -27,7 +35,6 @@ function App(): JSX.Element {
           </a>
         </div>
       </div>
-      <Versions></Versions>
     </>
   )
 }
