@@ -3,12 +3,21 @@ Store.initRenderer()
 import { z } from 'zod'
 import { zodToJsonSchema } from 'zod-to-json-schema'
 
-const zodOptionsSchema = z.object({
+export const zodOptionsSchema = z.object({
   darkMode: z.boolean().default(true),
   backupConfig: z
     .object({
       backupFiles: z.array(z.string()).default([]),
-      dayToKeep: z.number().min(1).max(7).default(7)
+      dayToKeep: z.number().min(1).max(7).default(7),
+      backupCron: z.string().min(1).default('00 00 08 * * *'),
+      outputFolder: z.string().min(1).default('c:\\out'),
+
+      sendFile: z.boolean().default(false),
+      pathRemote: z.string().nullable().default(null),
+      sftpUser: z.string().nullable().default(null),
+      sftpHost: z.string().nullable().default(null),
+      sftpPort: z.string().nullable().default(null),
+      sshKeyPath: z.string().nullable().default(null)
     })
     .default({})
 })
@@ -25,7 +34,11 @@ export const optionsSchema: Schema<Options> = optionsObject as Schema<Options>
 export const store = new Store<Options>({
   schema: optionsSchema,
   migrations: {
-    '1.0.0': (store) => {}
+    '1.0.0': (store) => {},
+    '1.0.1': (store) => {
+      store.delete('backupConfig.backupFiles')
+      store.delete('backupConfig.dayToKeep')
+    }
   }
 })
 
