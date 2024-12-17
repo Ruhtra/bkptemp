@@ -17,7 +17,7 @@ function createWindow(): void {
       nodeIntegration: true
     },
     width: 400,
-    height: 600,
+    height: 700,
     show: false
   })
 
@@ -82,30 +82,35 @@ app.whenReady().then(() => {
   ipcMain.handle('setSettings', (_event, newSettings: Options) => {
     store.set(newSettings)
   })
-  ipcMain.handle('dialog:openFile', async (_event, type: 'file' | 'folder' | 'any') => {
-    if (type === 'file') {
-      const result = await dialog.showOpenDialog({
-        properties: ['openFile'], // Permite selecionar arquivos e pastas
-        filters: [
-          {
-            name: 'Firebird File (.FDB)',
-            extensions: ['fdb', 'FDB'] // Filtrando para arquivos com extensões relacionadas ao SSH
-          }
-        ]
-      })
-      return result.filePaths
-    } else if (type == 'folder') {
-      const result = await dialog.showOpenDialog({
-        properties: ['openFile', 'openDirectory'] // Permite selecionar arquivos e pastas
-      })
-      return result.filePaths
-    } else if (type == 'any') {
-      const result = await dialog.showOpenDialog({
-        properties: ['openFile'] // Permite selecionar arquivos e pastas
-      })
-      return result.filePaths
+  ipcMain.handle(
+    'dialog:openFile',
+    async (_event, type: 'file' | 'folder' | 'any'): Promise<string[]> => {
+      if (type === 'file') {
+        const result = await dialog.showOpenDialog({
+          properties: ['openFile'], // Permite selecionar arquivos e pastas
+          filters: [
+            {
+              name: 'Firebird File (.FDB)',
+              extensions: ['fdb', 'FDB'] // Filtrando para arquivos com extensões relacionadas ao SSH
+            }
+          ]
+        })
+        return result.filePaths
+      } else if (type == 'folder') {
+        const result = await dialog.showOpenDialog({
+          properties: ['openFile', 'openDirectory'] // Permite selecionar arquivos e pastas
+        })
+        return result.filePaths
+      } else if (type == 'any') {
+        const result = await dialog.showOpenDialog({
+          properties: ['openFile'] // Permite selecionar arquivos e pastas
+        })
+        return result.filePaths
+      } else {
+        return []
+      }
     }
-  })
+  )
 
   createWindow()
 

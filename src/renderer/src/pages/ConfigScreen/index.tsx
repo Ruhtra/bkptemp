@@ -131,7 +131,7 @@ export function ConfigScreen() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4 font-['Inter_var',sans-serif]">
+      <div className="min-h-[100%] bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4 font-['Inter_var',sans-serif]">
         <Card className="w-full max-w-2xl bg-white/80 backdrop-blur-sm">
           <CardContent className="flex items-center justify-center h-64">
             <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
@@ -145,7 +145,7 @@ export function ConfigScreen() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4 font-['Inter_var',sans-serif]">
+    <div className="min-h-[100%] bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4 font-['Inter_var',sans-serif]">
       <Card className="w-full max-w-2xl bg-white/80 backdrop-blur-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">
